@@ -2,10 +2,10 @@ require 'spec_helper'
 require 'reverse_parameters'
 
 describe ReverseParameters do
-  describe '::method_parameters' do
+  describe '#parameters' do
 
-    let(:subject) { described_class.method_parameters(parameters) }
-    let(:parameters) { method(:example).parameters }
+    let(:subject) { described_class.new(method_proc).parameters.to_s }
+    let(:method_proc) { method(:example) }
 
     context 'keyreq' do
 
@@ -17,7 +17,7 @@ describe ReverseParameters do
 
     context 'key' do
 
-      def example(named_param: nil)
+      def example(named_param: [])
       end
 
       it { expect(subject).to eq('named_param: nil') }
@@ -57,7 +57,7 @@ describe ReverseParameters do
 
     context 'req, opt' do
 
-      def example(req_param, opt_param=nil)
+      def example(req_param, opt_param = {})
       end
 
       it { expect(subject).to eq('req_param, opt_param=nil') }
@@ -65,25 +65,29 @@ describe ReverseParameters do
 
     context 'key, keyreq' do
 
-      def example(named_param_req: nil, named_param:)
+      def example(named_param: 1, named_param_req:)
       end
 
-      it { expect(subject).to eq('named_param:, named_param_req: nil') }
+      it { expect(subject).to eq('named_param_req:, named_param: nil') }
     end
 
     context 'rep, key' do
 
-      def example(req_param, key_param: nil)
+      def example(req_param, key_param: 2)
       end
 
       it { expect(subject).to eq('req_param, key_param: nil') }
+
+      describe '#to_a' do
+        it { expect(described_class.new(method_proc).parameters.to_a).to eq(['req_param', 'key_param: nil']) }
+      end
     end
   end
 
-  describe '::method_arguments' do
+  describe '#arguments' do
 
-    subject { described_class.method_arguments(parameters) }
-    let(:parameters) { method(:example).parameters }
+    let(:subject) { described_class.new(method_proc.parameters).arguments.to_s }
+    let(:method_proc) { method(:example) }
 
     context 'keyreq' do
 
@@ -155,6 +159,17 @@ describe ReverseParameters do
       end
 
       it { expect(subject).to eq('req_param, key_param: key_param') }
+
+      describe '#to_a' do
+        it { expect(described_class.new(method_proc).arguments.to_a).to eq(['req_param', 'key_param: key_param']) }
+      end
+    end
+
+    context 'ArgumentError' do
+
+      it 'raises an error if input is not a Proc or an Array' do
+        expect{ described_class.new(1) }.to raise_error(ArgumentError, 'Input must be an Array of parameters or a Proc object.')
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 # ReverseParameters
 
-Recreate ruby method signatures using ruby's method to Proc creation `#method(:method_name).parameters`. Use this to dynamically recreate method interfaces. 
+Recreate ruby method signatures using ruby's method to Proc creation `#method(:method_name).parameters`. Use this to dynamically recreate method parameter interfaces. 
 
 ## Installation
 
@@ -30,13 +30,19 @@ parameters = method(:example_method).parameters
   #=> [[:keyreq, :named_param]]
     
 # Method arguments are the real values passed to (and received by) the function.
-ReverseParameters.method_arguments(parameters)
+ReverseParameters.arguments(parameters).to_s
   #=> "named_param: named_param"
     
 # Method parameters are the names listed in the function definition.
-ReverseParameters.method_parameters(parameters)
+ReverseParameters.parameters(parameters).to_s
   #=> "named_param:"
 ```
+
+## Limitations
+
+Since it is not possible to get the default values using `Proc#parameters` any optional will default to nil. 
+There are no consistent of ways of accurately obtaining that what the optional default value is. 
+Since this library's focus is to recreate the public API of a ruby method a default values lies in the private implementation and is out of scope. 
 
 ## Development
 
