@@ -11,16 +11,8 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Recreate ruby method signatures.}
   spec.description   = %q{Recreate ruby method signatures using ruby's method to Proc creation #method(:method_name).parameters. Use this to dynamically recreate method interfaces.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/zeisler/reverse_parameters"
   spec.license       = "MIT"
-
-  # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
-  # delete this section to allow pushing this gem to any host.
-  if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
-  else
-    raise "RubyGems 2.0 or newer is required to protect against public gem pushes."
-  end
 
   spec.required_ruby_version = '>= 2.1'
 
@@ -31,5 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "rspec", "~> 3.3"
 end
