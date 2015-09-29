@@ -29,17 +29,18 @@ require 'reverse_parameters'
 
 def example_method(named_param:)
 end
-
-parameters = method(:example_method).parameters
-  #=> [[:keyreq, :named_param]]
     
 # Method arguments are the real values passed to (and received by) the function.
-ReverseParameters.new(parameters).arguments.to_s
+ReverseParameters.new(method(:example_method)).arguments.to_s
   #=> "named_param: named_param"
     
 # Method parameters are the names listed in the function definition.
-ReverseParameters.new(parameters).parameters.to_s
+ReverseParameters.new(method(:example_method)).parameters.to_s
   #=> "named_param:"
+  
+# Source Ruby API
+method(:example_method).parameters
+  #=> [[:keyreq, :named_param]]
 ```
 
 ## Limitations
