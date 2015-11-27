@@ -82,6 +82,14 @@ describe ReverseParameters do
         it { expect(described_class.new(method_proc).parameters.to_a).to eq(['req_param', 'key_param: nil']) }
       end
     end
+
+    context 'keyrest' do
+
+      def example(**keyrest)
+      end
+
+      it { expect(subject).to eq('**keyrest') }
+    end
   end
 
   describe '#arguments' do
@@ -127,6 +135,14 @@ describe ReverseParameters do
       end
 
       it { expect(subject).to eq('opt_param') }
+    end
+
+    context 'keyrest' do
+
+      def example(**keyrest)
+      end
+
+      it { expect(subject).to eq('keyrest') }
     end
 
     context 'req, rest' do

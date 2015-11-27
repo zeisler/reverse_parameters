@@ -2,6 +2,7 @@ require "reverse_parameters/version"
 
 class ReverseParameters
 
+  # @param input [Proc, Array]
   def initialize(input)
     if input.respond_to?(:to_proc)
       @params = input.to_proc.parameters
@@ -13,11 +14,13 @@ class ReverseParameters
   end
 
   # Method parameters are the names listed in the function definition.
+  # @return [ReverseParameters::Parameters]
   def parameters
     Parameters.new(params)
   end
 
   # Method arguments are the real values passed to (and received by) the function.
+  # @return [ReverseParameters::Arguments]
   def arguments
     Arguments.new(params)
   end
@@ -77,6 +80,8 @@ class ReverseParameters
             name
           when :rest
             "*#{name}"
+          when :keyrest
+            "**#{name}"
           when :opt
             "#{name}=nil"
           when :keyreq
