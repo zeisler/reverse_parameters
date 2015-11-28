@@ -32,7 +32,7 @@ class ReverseParameters
     include Enumerable
 
     def initialize(collection)
-      @collection = collection.map{|state, name| item_class.new(state: state, name: name)}
+      @collection = collection.map { |state, name| item_class.new(state: state, name: name) }
     end
 
     def each(&block)
@@ -52,6 +52,7 @@ class ReverseParameters
         @name  = name
         @state = state
       end
+
       attr_reader :name, :state
     end
   end
@@ -62,6 +63,8 @@ class ReverseParameters
         case state
           when :key, :keyreq
             "#{name}: #{name}"
+          when :block
+            "&#{name}"
           else
             name
         end.to_s
@@ -88,6 +91,8 @@ class ReverseParameters
             "#{name}:"
           when :key
             "#{name}: nil"
+          when :block
+            "&#{name}"
         end.to_s
       end
     end

@@ -43,11 +43,12 @@ method(:example_method).parameters
   #=> [[:keyreq, :named_param]]
 ```
 
+To learn more about ruby's parameters method read [Inspecting Method Parameters in Ruby 2.2.3](https://www.rubyplus.com/articles/2721) by RubyPlus.com
+
+
 ## Limitations
 
-Since it is not possible to get the default values using `Proc#parameters` any optional will default to nil. 
-There are no consistent of ways of accurately obtaining that what the optional default value is. 
-Since this library's focus is to recreate the public API of a ruby method a default values lies in the private implementation and is out of scope. 
+It is not possible to get the default values using `Proc#parameters` any optional will default to nil.
 
 ## Development
 
