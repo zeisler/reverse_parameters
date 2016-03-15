@@ -230,7 +230,7 @@ describe ReverseParameters do
       it { expect(subject).to eq('keyrest') }
     end
 
-    context 'keyrest' do
+    context 'block' do
 
       def example(&blk)
         blk.call
@@ -245,6 +245,10 @@ describe ReverseParameters do
       end
 
       it { expect(subject).to eq("&blk") }
+
+      it 'blocks as values' do
+        expect(described_class.new(method_proc, blocks_as_values: true).arguments.to_s).to eq("blk")
+      end
     end
 
     context 'req, rest' do

@@ -2,8 +2,19 @@ require "reverse_parameters/version"
 
 class ReverseParameters
 
-  # @param input [Proc, Array]
-  def initialize(input)
+  # @param [Proc, Array] input
+  # @params [true, false] blocks_as_values defaults to false
+  # @example
+  # def my_method(&block)
+  # end
+  #
+  # ReverseParameters.new(method(:my_method), blocks_as_values: true).arguments.to_s
+  #   #=> "block"
+  #
+  # # ReverseParameters.new(method(:my_method)).to_s
+  #   #=> "&block"
+  def initialize(input, blocks_as_values: false)
+    @blocks_as_values = blocks_as_values
     if input.respond_to?(:to_proc)
       @params = input.to_proc.parameters
     elsif input.respond_to?(:to_ary)
@@ -22,17 +33,17 @@ class ReverseParameters
   # Method arguments are the real values passed to (and received by) the function.
   # @return [ReverseParameters::Arguments]
   def arguments
-    Arguments.new(params)
+    Arguments.new(params, blocks_as_values: blocks_as_values)
   end
 
   private
-  attr_reader :params
+  attr_reader :params, :blocks_as_values
 
   class BaseCollection
     include Enumerable
 
-    def initialize(collection)
-      @collection = collection.map { |state, name| item_class.new(state: state, name: name) }
+    def initialize(collection, **options)
+      @collection = collection.map { |state, name| item_class.new(state: state, name: name, **options) }
     end
 
     def each(&block)
@@ -48,31 +59,66 @@ class ReverseParameters
     end
 
     class Item
-      def initialize(name:, state:)
+      def initialize(name:, state:, **options)
         @name  = name
         @state = state
+        post_initialize(options)
+      end
+
+      def post_initialize(*)
       end
 
       attr_reader :name, :state
     end
   end
 
-  class Arguments < BaseCollection;
+  class Arguments < BaseCollection
+
     class Arg < BaseCollection::Item
       def to_s
         case state
           when :key, :keyreq
             "#{name}: #{name}"
           when :block
-            "&#{name}"
+            block(name)
           else
             name
         end.to_s
       end
+
+      def block_as_value
+        case state
+        when :key, :keyreq
+          "#{name}: #{name}"
+        else
+          name
+        end.to_s
+      end
+
+      private
+
+      def post_initialize(blocks_as_values:)
+        @blocks_as_values = blocks_as_values
+      end
+
+      def block(name)
+        if @blocks_as_values
+          name
+        else
+          "&#{name}"
+        end
+      end
     end
+
 
     def item_class
       Arguments::Arg
+    end
+
+    private
+
+    def block(name, pre="&")
+      [pre, name].compact!.join("")
     end
   end
   class Parameters < BaseCollection;
