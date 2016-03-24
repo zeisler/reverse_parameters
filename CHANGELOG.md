@@ -1,3 +1,11 @@
+## 1.1.0 - 2016-03-24
+
+### API Changes
+- `ReverseParameters` instance will now be `ReverseParameters::Base`. This should not change any usage.
+
+### Enhancement
+- Add Ruby 2.1 Refinements ie. `using ReverseParameters` to enable `Method#reverse_parameters` and  `UnboundMethod#reverse_parameters`
+
 ## 1.0.0 - 2016-03-24
 
 ### API Changes

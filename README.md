@@ -43,6 +43,24 @@ method(:example_method).parameters
   #=> [[:keyreq, :named_param]]
 ```
 
+### Ruby Refinements
+
+```ruby
+require 'reverse_parameters'
+using ReverseParameters
+
+def example_method(named_param:)
+end
+    
+# Method arguments are the real values passed to (and received by) the function.
+method(:example_method).reverse_parameters_.arguments.to_s
+  #=> "named_param: named_param"
+    
+# Method parameters are the names listed in the function definition.
+method(:example_method).reverse_parameters.parameters.to_s
+  #=> "named_param:"
+```
+
 ### Monkey Patch to Ruby Core 
 
 *`Method` and `UnboundMethod`*

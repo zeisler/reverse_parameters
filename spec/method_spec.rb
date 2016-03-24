@@ -9,7 +9,7 @@ describe Method do
     def example
     end
 
-    it { expect(subject.reverse_parameters).to be_an_instance_of(ReverseParameters) }
+    it { expect(subject.reverse_parameters).to be_an_instance_of(ReverseParameters::Base) }
   end
 end
 
@@ -22,6 +22,6 @@ describe UnboundMethod do
 
     subject { TestClass.instance_method(:test_method) }
 
-    it { expect(subject.reverse_parameters).to be_an_instance_of(ReverseParameters) }
+    it { expect(subject.reverse_parameters).to be_an_instance_of(ReverseParameters::Base) }
   end
 end

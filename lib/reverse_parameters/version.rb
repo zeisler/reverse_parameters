@@ -1,3 +1,3 @@
-class ReverseParameters
-  VERSION = "1.0.0".freeze
+module ReverseParameters
+  VERSION = "1.1.0".freeze
 end

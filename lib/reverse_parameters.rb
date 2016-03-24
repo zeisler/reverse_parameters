@@ -1,40 +1,49 @@
 require "reverse_parameters/version"
+require "reverse_parameters/core_ext/refinements"
 
-class ReverseParameters
+module ReverseParameters
 
   # @param [Proc, Array] input
-  def initialize(input)
-    if input.respond_to?(:to_proc)
-      @params = input.to_proc.parameters
-    elsif input.respond_to?(:to_ary)
-      @params = input.to_ary
-    else
-      raise ArgumentError.new("Input must be an Array of parameters or a Proc object.")
+  def self.new(*args)
+    Base.new(*args)
+  end
+
+  class Base
+
+    # @param [Proc, Array] input
+    def initialize(input)
+      if input.respond_to?(:to_proc)
+        @params = input.to_proc.parameters
+      elsif input.respond_to?(:to_ary)
+        @params = input.to_ary
+      else
+        raise ArgumentError.new("Input must be an Array of parameters or a Proc object.")
+      end
     end
-  end
 
-  # Method parameters are the names listed in the function definition.
-  # @return [ReverseParameters::Parameters]
-  def parameters
-    Parameters.new(params)
-  end
+    # Method parameters are the names listed in the function definition.
+    # @return [ReverseParameters::Parameters]
+    def parameters
+      Parameters.new(params)
+    end
 
-  # Method arguments are the real values passed to (and received by) the function.
-  # @return [ReverseParameters::Arguments]
-  # @param [true, false] blocks_as_values: express block as variable vs a proc passed to the end of a method.
-  # def my_method(&block)
-  # end
-  # ReverseParameters.new(method(:my_method)).arguments(blocks_as_values: true).to_s
-  #   #=> "block"
-  #
-  # # ReverseParameters.new(method(:my_method)).arguments.to_s
-  #   #=> "&block"
-  def arguments(blocks_as_values: false)
-    Arguments.new(params, blocks_as_values: blocks_as_values)
-  end
+    # Method arguments are the real values passed to (and received by) the function.
+    # @return [ReverseParameters::Arguments]
+    # @param [true, false] blocks_as_values: express block as variable vs a proc passed to the end of a method.
+    # def my_method(&block)
+    # end
+    # ReverseParameters.new(method(:my_method)).arguments(blocks_as_values: true).to_s
+    #   #=> "block"
+    #
+    # # ReverseParameters.new(method(:my_method)).arguments.to_s
+    #   #=> "&block"
+    def arguments(blocks_as_values: false)
+      Arguments.new(params, blocks_as_values: blocks_as_values)
+    end
 
-  private
-  attr_reader :params
+    private
+    attr_reader :params
+  end
 
   class BaseCollection
     include Enumerable
@@ -74,12 +83,12 @@ class ReverseParameters
     class Arg < BaseCollection::Item
       def to_s
         case state
-          when :key, :keyreq
-            "#{name}: #{name}"
-          when :block
-            block(name)
-          else
-            name
+        when :key, :keyreq
+          "#{name}: #{name}"
+        when :block
+          block(name)
+        else
+          name
         end.to_s
       end
 
@@ -122,20 +131,20 @@ class ReverseParameters
     class Param < BaseCollection::Item
       def to_s
         case state
-          when :req
-            name
-          when :rest
-            "*#{name}"
-          when :keyrest
-            "**#{name}"
-          when :opt
-            "#{name}=nil"
-          when :keyreq
-            "#{name}:"
-          when :key
-            "#{name}: nil"
-          when :block
-            "&#{name}"
+        when :req
+          name
+        when :rest
+          "*#{name}"
+        when :keyrest
+          "**#{name}"
+        when :opt
+          "#{name}=nil"
+        when :keyreq
+          "#{name}:"
+        when :key
+          "#{name}: nil"
+        when :block
+          "&#{name}"
         end.to_s
       end
     end
