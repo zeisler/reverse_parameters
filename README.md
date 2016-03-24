@@ -43,6 +43,21 @@ method(:example_method).parameters
   #=> [[:keyreq, :named_param]]
 ```
 
+### Monkey Patch to Ruby Core 
+
+*`Method` and `UnboundMethod`*
+
+```ruby
+require 'reverse_parameters/core_ext'
+
+def example_method(named_param:)
+end
+    
+
+method(:example_method).reverse_parameters.arguments.to_s
+  #=> "named_param: named_param"
+```
+
 To learn more about ruby's parameters method read [Inspecting Method Parameters in Ruby 2.2.3](https://www.rubyplus.com/articles/2721) by RubyPlus.com
 
 

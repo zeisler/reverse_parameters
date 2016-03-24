@@ -3,18 +3,7 @@ require "reverse_parameters/version"
 class ReverseParameters
 
   # @param [Proc, Array] input
-  # @params [true, false] blocks_as_values defaults to false
-  # @example
-  # def my_method(&block)
-  # end
-  #
-  # ReverseParameters.new(method(:my_method), blocks_as_values: true).arguments.to_s
-  #   #=> "block"
-  #
-  # # ReverseParameters.new(method(:my_method)).to_s
-  #   #=> "&block"
-  def initialize(input, blocks_as_values: false)
-    @blocks_as_values = blocks_as_values
+  def initialize(input)
     if input.respond_to?(:to_proc)
       @params = input.to_proc.parameters
     elsif input.respond_to?(:to_ary)
@@ -32,12 +21,20 @@ class ReverseParameters
 
   # Method arguments are the real values passed to (and received by) the function.
   # @return [ReverseParameters::Arguments]
-  def arguments
+  # @param [true, false] blocks_as_values: express block as variable vs a proc passed to the end of a method.
+  # def my_method(&block)
+  # end
+  # ReverseParameters.new(method(:my_method)).arguments(blocks_as_values: true).to_s
+  #   #=> "block"
+  #
+  # # ReverseParameters.new(method(:my_method)).arguments.to_s
+  #   #=> "&block"
+  def arguments(blocks_as_values: false)
     Arguments.new(params, blocks_as_values: blocks_as_values)
   end
 
   private
-  attr_reader :params, :blocks_as_values
+  attr_reader :params
 
   class BaseCollection
     include Enumerable
