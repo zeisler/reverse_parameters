@@ -8,10 +8,6 @@ describe Method do
     def example
     end
 
-    context "when not using refinement" do
-      it { expect { subject.reverse_parameters }.to raise_error(NoMethodError) }
-    end
-
     context "when using refinement" do
       using ReverseParameters
       it { expect(subject.reverse_parameters).to be_an_instance_of(ReverseParameters::Base) }
@@ -27,10 +23,6 @@ describe UnboundMethod do
     end
 
     subject { TestClass.instance_method(:test_method) }
-
-    context "when not using refinement" do
-      it { expect { subject.reverse_parameters }.to raise_error(NoMethodError) }
-    end
 
     context "when using refinement" do
       using ReverseParameters
