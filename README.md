@@ -53,7 +53,7 @@ def example_method(named_param:)
 end
     
 # Method arguments are the real values passed to (and received by) the function.
-method(:example_method).reverse_parameters_.arguments.to_s
+method(:example_method).reverse_parameters.arguments.to_s
   #=> "named_param: named_param"
     
 # Method parameters are the names listed in the function definition.
