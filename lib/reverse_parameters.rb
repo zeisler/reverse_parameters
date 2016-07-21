@@ -16,7 +16,7 @@ module ReverseParameters
         @params = input.to_proc.parameters
       elsif input.respond_to?(:to_ary)
         @params = input.to_ary
-      elsif UnboundMethod
+      elsif input.is_a? UnboundMethod
         @params = input.parameters
       else
         raise ArgumentError.new("Input must be an Array of parameters or a Proc object.")
