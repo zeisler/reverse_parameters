@@ -66,6 +66,10 @@ module ReverseParameters
       map(&:to_s)
     end
 
+    def [](value)
+      @collection[value]
+    end
+
     class Item
       def initialize(name:, state:, **options)
         @name  = name
@@ -87,6 +91,10 @@ module ReverseParameters
         case state
         when :key, :keyreq
           "#{name}: #{name}"
+        when :keyrest
+          "**#{name}"
+        when :rest
+          "*#{name}"
         when :block
           block(name)
         else

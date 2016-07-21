@@ -197,14 +197,14 @@ describe ReverseParameters do
       end
 
       it do
-        rest_param = "hello"
+        rest_param = ["hello", 1, 2, 3]
         r = eval <<-RUBY
           example(#{subject})
         RUBY
-        expect(r).to eq [rest_param]
+        expect(r).to eq rest_param
       end
 
-      it { expect(subject).to eq('rest_param') }
+      it { expect(subject).to eq('*rest_param') }
     end
 
     context 'opt' do
@@ -238,7 +238,7 @@ describe ReverseParameters do
         expect(r).to eq keyrest
       end
 
-      it { expect(subject).to eq('keyrest') }
+      it { expect(subject).to eq('**keyrest') }
     end
 
     context 'block' do
@@ -277,7 +277,7 @@ describe ReverseParameters do
         expect(r).to eq [3, 1]
       end
 
-      it { expect(subject).to eq('req_param, rest_param') }
+      it { expect(subject).to eq('req_param, *rest_param') }
     end
 
     context 'req, opt' do
@@ -314,6 +314,24 @@ describe ReverseParameters do
       end
 
       it { expect(subject).to eq('named_param: named_param, named_param_req: named_param_req') }
+    end
+
+    context 'keyreq, keyrest' do
+
+      def example(named_param_req: , **key_rest)
+        named_param_req.to_s + key_rest.to_s
+      end
+
+      it do
+        r = eval <<-RUBY
+          named_param_req = 1
+          key_rest = {}
+          example(#{subject})
+        RUBY
+        expect(r).to eq "1{}"
+      end
+
+      it { expect(subject).to eq('named_param_req: named_param_req, **key_rest') }
     end
 
     context 'rep, key' do
