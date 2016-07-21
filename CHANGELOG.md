@@ -1,3 +1,11 @@
+## 1.1.1 - 2016-07-21
+
+## Fix
+- `ReverseParameters::Arguments` has been fixed to correctly make values passable from keyrest and rest args.
+
+### Enhancement
+- `ReverseParameters.new` now correctly accepts `UnboundMethod` objects.
+
 ## 1.1.0 - 2016-03-24
 
 ### API Changes
