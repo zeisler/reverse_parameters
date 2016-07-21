@@ -1,7 +1,7 @@
 # ReverseParameters
 
 [![Build Status](https://travis-ci.org/zeisler/reverse_parameters.svg)](https://travis-ci.org/zeisler/reverse_parameters)
-[![Code Climate](https://codeclimate.com/github/zeisler/active_mocker.png)](https://codeclimate.com/github/zeisler/reverse_parameters)
+[![Code Climate](https://codeclimate.com/github/zeisler/reverse_parameters/badges/gpa.svg)](https://codeclimate.com/github/zeisler/reverse_parameters)
 [![Gem Version](https://badge.fury.io/rb/reverse_parameters.svg)](http://badge.fury.io/rb/reverse_parameters)
 
 Recreate ruby method signatures using ruby's method to Proc creation `#method(:method_name).parameters`. Use this to dynamically recreate method parameter interfaces. 
