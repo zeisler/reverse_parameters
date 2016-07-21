@@ -14,6 +14,17 @@ describe ReverseParameters do
         method(:recreation)
     }
 
+    context "When UnboundMethod" do
+      class Bounded
+        def example(named_param:)
+        end
+      end
+
+      let(:method_proc) { Bounded.instance_method(:example) }
+      it { expect(subject).to eq('named_param:') }
+      it { expect(recreation_proc.parameters).to eq method_proc.parameters }
+    end
+    
     context 'keyreq' do
 
       def example(named_param:)
