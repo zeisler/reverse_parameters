@@ -3,7 +3,7 @@ require "reverse_parameters/core_ext/refinements"
 
 module ReverseParameters
 
-  # @param [Proc, Array] input
+  # @param [Proc, Array, UnboundMethod, Method] input
   def self.new(*args)
     Base.new(*args)
   end
@@ -66,10 +66,6 @@ module ReverseParameters
       map(&:to_s)
     end
 
-    def [](value)
-      @collection[value]
-    end
-
     class Item
       def initialize(name:, state:, **options)
         @name  = name
@@ -102,15 +98,6 @@ module ReverseParameters
         end.to_s
       end
 
-      def block_as_value
-        case state
-        when :key, :keyreq
-          "#{name}: #{name}"
-        else
-          name
-        end.to_s
-      end
-
       private
 
       def post_initialize(blocks_as_values:)
@@ -126,17 +113,11 @@ module ReverseParameters
       end
     end
 
-
     def item_class
       Arguments::Arg
     end
-
-    private
-
-    def block(name, pre="&")
-      [pre, name].compact!.join("")
-    end
   end
+
   class Parameters < BaseCollection;
     class Param < BaseCollection::Item
       def to_s
