@@ -45,7 +45,7 @@ module ReverseParameters
       Arguments.new(params)
     end
 
-    private
+    protected
     attr_reader :params
   end
 
@@ -83,37 +83,35 @@ module ReverseParameters
   end
 
   class Arguments < BaseCollection
-
     class Arg < BaseCollection::Item
       def to_s
-        case state
-        when :key, :keyreq
-          "#{name}: #{name}"
-        when :keyrest
-          "**#{name}"
-        when :rest
-          "*#{name}"
-        when :block
-          block(name)
-        else
-          name
-        end.to_s
+        send(state.to_sym).to_s
+      rescue NoMethodError
+        name.to_s
       end
 
-      private
+      protected
 
-      def post_initialize(blocks_as_values:)
-        @blocks_as_values = blocks_as_values
+      def key
+        "#{name}: #{name}"
       end
 
-      def block(name)
-        if @blocks_as_values
-          name
-        else
-          "&#{name}"
-        end
+      alias_method :keyreq, :key
+
+      def keyrest
+        "**#{name}"
+      end
+
+      def rest
+        "*#{name}"
+      end
+
+      def block
+        "&#{name}"
       end
     end
+
+    private
 
     def item_class
       Arguments::Arg
@@ -123,22 +121,37 @@ module ReverseParameters
   class Parameters < BaseCollection;
     class Param < BaseCollection::Item
       def to_s
-        case state
-        when :req
-          name
-        when :rest
-          "*#{name}"
-        when :keyrest
-          "**#{name}"
-        when :opt
-          "#{name}=nil"
-        when :keyreq
-          "#{name}:"
-        when :key
-          "#{name}: nil"
-        when :block
-          "&#{name}"
-        end.to_s
+        send(state.to_sym).to_s
+      end
+
+      protected
+
+      def req
+        name
+      end
+
+      def rest
+        "*#{name}"
+      end
+
+      def keyrest
+        "**#{name}"
+      end
+
+      def opt
+        "#{name}=nil"
+      end
+
+      def keyreq
+        "#{name}:"
+      end
+
+      def key
+        "#{name}: nil"
+      end
+
+      def block
+        "&#{name}"
       end
     end
 

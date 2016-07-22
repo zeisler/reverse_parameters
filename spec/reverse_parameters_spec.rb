@@ -258,7 +258,7 @@ describe ReverseParameters do
       it { expect(subject).to eq("&blk") }
 
       it 'blocks as values' do
-        expect(described_class.new(method_proc).arguments(blocks_as_values: true).to_s).to eq("blk")
+        expect(described_class.new(method_proc).arguments.to_s).to eq("&blk")
       end
     end
 
@@ -332,16 +332,6 @@ describe ReverseParameters do
       end
 
       it { expect(subject).to eq('named_param_req: named_param_req, **key_rest') }
-    end
-
-    describe 'blocks_as_values' do
-
-      let(:subject) { described_class.new(method_proc.parameters).arguments(blocks_as_values: true).to_s }
-
-      def example(&block)
-      end
-
-      it { expect(subject).to eq('block') }
     end
 
     context 'rep, key' do
