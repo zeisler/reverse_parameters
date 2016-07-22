@@ -2,7 +2,6 @@ require "reverse_parameters/version"
 require "reverse_parameters/core_ext/refinements"
 
 module ReverseParameters
-
   # @param [Proc, Array, UnboundMethod, Method] input
   def self.new(*args)
     Base.new(*args)
@@ -23,24 +22,27 @@ module ReverseParameters
       end
     end
 
-    # Method parameters are the names listed in the function definition.
-    # @return [ReverseParameters::Parameters]
+    # Parameters are the names listed in the method definition, also know as the method signature.
+    #
+    # def my_method(a, key:);end
+    #
+    # ReverseParameters.new(method(:my_method)).arguments.to_s
+    #   #=> "a, key:"
+    #
+    # # @return [ReverseParameters::Parameters]
     def parameters
       Parameters.new(params)
     end
 
-    # Method arguments are the real values passed to (and received by) the function.
-    # @return [ReverseParameters::Arguments]
-    # @param [true, false] blocks_as_values: express block as variable vs a proc passed to the end of a method.
-    # def my_method(&block)
-    # end
-    # ReverseParameters.new(method(:my_method)).arguments(blocks_as_values: true).to_s
-    #   #=> "block"
+    # Arguments are the real values passed to (and received by) the method.
     #
-    # # ReverseParameters.new(method(:my_method)).arguments.to_s
-    #   #=> "&block"
-    def arguments(blocks_as_values: false)
-      Arguments.new(params, blocks_as_values: blocks_as_values)
+    # def my_method(a, key:, &block);end
+    # ReverseParameters.new(method(:my_method)).arguments.to_s
+    #   #=> "a, key: key, &block"
+    #
+    # @return [ReverseParameters::Arguments]
+    def arguments
+      Arguments.new(params)
     end
 
     private
