@@ -2,14 +2,15 @@ require "reverse_parameters/version"
 require "reverse_parameters/core_ext/refinements"
 
 module ReverseParameters
-  # @param [Proc, Array, UnboundMethod, Method] input
-  def self.new(*args)
-    Base.new(*args)
+  # @param [Object#to_proc, Object#to_ary, UnboundMethod] input
+  def self.new(input)
+    return input if input.is_a? Base
+    Base.new(input)
   end
 
   class Base
 
-    # @param [Proc, Array] input
+    # @param [Object#to_proc, Object#to_ary, UnboundMethod] input
     def initialize(input)
       if input.respond_to?(:to_proc)
         @params = input.to_proc.parameters
@@ -26,7 +27,7 @@ module ReverseParameters
     #
     # def my_method(a, key:);end
     #
-    # ReverseParameters.new(method(:my_method)).arguments.to_s
+    # ReverseParameters.new(method(:my_method)).parameters.to_s
     #   #=> "a, key:"
     #
     # # @return [ReverseParameters::Parameters]
