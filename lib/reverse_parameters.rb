@@ -54,6 +54,7 @@ module ReverseParameters
 
     def initialize(collection, **options)
       @collection = collection.map { |state, name| item_class.new(state: state, name: name, **options) }
+      @pre_collection = collection
     end
 
     def each(&block)
@@ -83,6 +84,12 @@ module ReverseParameters
   end
 
   class Arguments < BaseCollection
+
+    # @return [ArgumentsWithValues] defines example values to arguments in line.
+    def with_values
+      ArgumentsWithValues.new(@pre_collection)
+    end
+
     class Arg < BaseCollection::Item
       def to_s
         send(state.to_sym).to_s
@@ -115,6 +122,38 @@ module ReverseParameters
 
     def item_class
       Arguments::Arg
+    end
+  end
+
+  class ArgumentsWithValues < Arguments
+    class Item < BaseCollection::Item
+      def to_s
+        send(state.to_sym).to_s
+      rescue NoMethodError
+        "#{name}='#{name}'"
+      end
+
+      def key
+        "#{name}: '#{name}'"
+      end
+
+      alias_method :keyreq, :key
+
+      def keyrest
+        "**#{name}={}"
+      end
+
+      def rest
+        "*#{name}=[]"
+      end
+
+      def block
+        "&#{name}=Proc.new{}"
+      end
+    end
+
+    def item_class
+      ArgumentsWithValues::Item
     end
   end
 
