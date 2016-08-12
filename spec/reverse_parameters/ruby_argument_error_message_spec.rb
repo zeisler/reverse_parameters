@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'reverse_parameters/ruby_argument_error_message'
+require "rubygems/version"
 
 RSpec.describe ReverseParameters::RubyArgumentErrorMessage do
   let(:example_methods) {
@@ -28,8 +29,13 @@ RSpec.describe ReverseParameters::RubyArgumentErrorMessage do
     end
 
     it "missing args" do
-      example_methods.call(example1: "a,b", example2: "a")
-      expect(subject).to eq("wrong number of arguments (given 1, expected 2)")
+      example_methods.call(example1: "a", example2: "a,c,d")
+      msg = if Gem::Version.new(RUBY_VERSION) > Gem::Version.new("2.3")
+              "wrong number of arguments (given 3, expected 1)"
+            else
+              "wrong number of arguments (3 for 1)"
+            end
+      expect(subject).to eq(msg)
     end
 
     it "values given for double splat" do
